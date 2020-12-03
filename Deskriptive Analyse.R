@@ -36,6 +36,30 @@ summary(price)
 #boxplot(price, data=house_prices,varwidth=TRUE)
 #hist(price,xlim=c(0,1000000))
 
+# Eine Übersicht der Verteilung der Hauspreise über die Dichtefunktion gewinnen
+plot(density(price), main="Dichtefunktion: Hauspreise")
+abline(0,0,0,321950) # add 1st Quartile
+abline(0,0,0,645000) # add 3rd Quartile
+
+# Dichtefunktion aufzeigen
+plot(density(price), main="Dichtefunktion: Hauspreise",xlim=c(0,2000000),xlab="Hauspreis",xaxt="n") # change x axis limit to exclude high outliers from the plot
+abline(0,0,0,321950) # add 1st Quartile
+abline(0,0,0,645000) # add 3rd Quartile
+?abline
+axis(1,at=c(0,321950,500000,645000,1000000,1500000),labels=c(0,321950,500000,645000,1000000,1500000)) # add custom x Axis Values
+text(380000,0.0000005,"- 1. Quartil")
+text(710000,0.0000005,"- 3. Quartil")
+
+# Globales Maximum innerhalb der Dichtefunktion => mean und median wahrscheinlich auch innerhalb Interquartilsabstand
+# Dichtefunktion weist einen linksschiefen Verlauf aus. Das heißt median ist kleiner als das arithmetische Mittel
+
+
+# looking at the 10 highest and lowest house prices
+sort_price <- house_prices[order(price),]
+head(sort_price$price,10)
+tail(sort_price$price,10)
+
+
 # Get an Overview of the dataset
 inspect(house_prices)
 # Obeservations: 
