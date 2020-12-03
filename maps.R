@@ -1,4 +1,4 @@
-df <- read.csv(".../kc_house_data.csv")
+df <- read.csv("kc_house_data.csv")
 
 library("ggplot2")
 theme_set(theme_bw())
