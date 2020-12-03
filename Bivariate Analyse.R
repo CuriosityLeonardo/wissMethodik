@@ -17,5 +17,3 @@ t.test(price,bedrooms,data = house_prices) # Output saved in "Forschungsfrage.do
 # Perform t Test on dependent variable price and independent variable bathrooms
 t.test(price,bathrooms,data=house_prices) # Output saved in "Forschungsfrage.docx" in section "Nullhypothese 3.2"
 
-
-# R Studio Git Connect Test
