@@ -1,4 +1,7 @@
 # remove all objects from workspace
+
+# Source: https://rstudio-pubs-static.s3.amazonaws.com/155304_cc51f448116744069664b35e7762999f.html
+
 rm(list = ls())
 detach("package:moderndive", unload=TRUE)
 
@@ -16,29 +19,30 @@ house_prices$sqmt_above <- house_prices$sqft_above*0.092903
 house_prices$sqmt_basement <- house_prices$sqft_basement*0.092903
 
 # drop the variables with sqft
-house_prices_sqmt <- subset(house_prices, select = -c(house_prices$sqft_living,
-                                                      house_prices$sqft_living15,
-                                                      house_prices$sqft_lot,
-                                                      house_prices$sqft_lot15,
-                                                      house_prices$sqft_above,
-                                                      house_prices$sqft_basement))
+house_prices_sqmt <- subset(house_prices, select = -c(sqft_living,
+                                                      sqft_living15,
+                                                      sqft_lot,
+                                                      sqft_lot15,
+                                                      sqft_above,
+                                                      sqft_basement))
 
 # attach the data to address the data in an easier way
-attach(house_prices)
+attach(house_prices_sqmt)
 
 
 # Get a sample of records to look at
-head(house_prices,10)
+head(house_prices_sqmt,10)
 
-help(house_prices)
-count(house_prices)
+help(house_prices_sqmt)
+count(house_prices_sqmt)
 
 # Get an overview of the distribution of house prices
+summary(house_prices_sqmt)
 mean(price) # arithmetisches Mittel
 median(price) # Median
 max(price)
 min(price)
-t <- table(price) # Häufigkeitstabelle
+t <- table(price) # Frequency Table
 t[which.max(t)] # Modus
 summary(price)
 
@@ -49,7 +53,7 @@ abline(0,0,0,645000) # add 3rd Quartile
 
 # Dichtefunktion zoom in auf relevanten bereich
 plotprice <- function(){
-plot(density(price), main="Dichtefunktion: Hauspreise",xlim=c(0,2000000),xlab="Hauspreis",xaxt="n") # change x axis limit to exclude high outliers from the plot
+plot(density(price), main="Dichtefunktion: Hauspreise",xlim=c(0,2000000),xlab="Hauspreis",ylab="Dichtewahrscheinlichkeit",xaxt="n") # change x axis limit to exclude high outliers from the plot
 abline(0,0,0,321950) # add 1st Quartile
 abline(0,0,0,645000) # add 3rd Quartile
 ?abline
@@ -59,6 +63,9 @@ text(710000,0.0000005,"- 3. Quartil")
 }
 plotprice()
 
+par(mfrow=c(1,2))
+boxplot(house_prices_sqmt$price, main ="Verteilung Hauspreise")
+boxplot(house_prices_sqmt$price, outline = FALSE, main ="Verteilung Hauspreise\nohne Ausreißer")
 
 # Observation:
 # Globales Maximum innerhalb der Dichtefunktion => mean und median wahrscheinlich auch innerhalb Interquartilsabstand
@@ -77,11 +84,11 @@ plot(density(sqmt_basement),main="Kellergroesse in QM",xlim=c(0,200))
 # wie ist ein Haus in King County aufgeteilt?
 # Histogramme mit Anzahl Schlafzimmer, Anzahl Badzimmer, Anzahl Etagen, Keller vorhanden?  
 par(mfrow=c(2,2))
-hist(bedrooms,main="Anzahl Schlafzimmer",xlim=c(0,8),xlab="Schlafzimmer",ylab="Anzahl Häuser",breaks=33,xaxt="n")
+hist(bedrooms,main="Anzahl Schlafzimmer",xlim=c(0,8),xlab="Anzahl Schlafzimmer",ylab="Anzahl Häuser",breaks=33,xaxt="n")
 axis(1,at=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c(0,1,2,3,4,5,6,7,8),pos=1) # add custom x Axis Values
-hist(bathrooms,main="Anzahl Badezimmer",xlim=c(0,6),xaxt="n",breaks=8,xlab="Badezimmer",ylab="Anzahl Häuser") # breaks at the max(bathrooms) to have 1 bar for each bathroom count
+hist(bathrooms,main="Anzahl Badezimmer",xlim=c(0,6),xaxt="n",breaks=8,xlab="Anzahl Badezimmer",ylab="Anzahl Häuser") # breaks at the max(bathrooms) to have 1 bar for each bathroom count
 axis(1,at=c(0.5,1.5,2.5,3.5,4.5,5.5,6.5),labels=c(0,1,2,3,4,5,6),pos=1) # add custom x Axis Values
-hist(floors,breaks=seq(1,3.5,0.25),xlab="Anzahl Etagen",xaxt="n",ylab="Anzahl Häuser")
+hist(floors,breaks=seq(1,3.5,0.25),main = "Anzahl Etagen", xlab="Anzahl Etagen",xaxt="n",ylab="Anzahl Häuser")
 axis(1,at=c(1.125,1.375,1.875,2.375,3.875),labels=c(1,1.5,2,2.5,3),pos=1) # add custom x Axis Values
 
 ?hist
