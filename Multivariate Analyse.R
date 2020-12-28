@@ -1,6 +1,6 @@
-# remove all objects from workspace
-
 # Source: https://rstudio-pubs-static.s3.amazonaws.com/155304_cc51f448116744069664b35e7762999f.html
+
+# remove all objects from workspace
 
 rm(list = ls())
 detach("package:moderndive", unload=TRUE)
@@ -29,19 +29,43 @@ house_prices_sqmt <- subset(house_prices, select = -c(sqft_living,
 # attach the data to address the data in an easier way
 attach(house_prices_sqmt)
 
-
-
 inspect(house_prices_sqmt)
+summary(house_prices_sqmt)
+
+### Analyse independent variables with dependent variable price in a 2 dimensional linear regression (p.81-82)
+# smqt_living15 and price
+cor(price,sqmt_living15) # 0.5853789
+sd(price) # 367127.2
+sd(sqmt_living15) # 63.67491
+Regressionsgewicht_price_sqmt_living15 <- cor(price,sqmt_living15) * (sd(price)/sd(sqmt_living15))
+Regressionsgewicht_price_sqmt_living15 # 3375.09
+# Interpretation: Mit jedem zusätzlichen m² Wohnfläche, steigt der Preis eines Hauses um 3375.09 Dollar
+Intercept_price_sqmt_living15 <- mean(price) - Regressionsgewicht_price_sqmt_living15 * mean(sqmt_living15)
+Intercept_price_sqmt_living15
+# Interpretation: Wenn die Wohnfläche bis auf 0m² reduziert worden wäre, würde das Haus -82807.2 Dollar kosten
+lm(data=house_prices_sqmt,price~sqmt_living15)
+
+summary(lm(data=house_prices_sqmt,price~date))
+
+summary(lm(data=house_prices_sqmt,price~bathrooms))
 
 
-regression <- step(lm(data = house_prices_sqmt,price~.),trace=1,steps=2)
+#is not running because it takes too much compute power (too many variables and observations)
+#regression <- step(lm(data = house_prices_sqmt,price~.),trace=1,steps=2)
 
-regression <- step(lm(data = swiss,Fertility~.),trace=1,steps=2)
+## Ecample for Step Regression with all the available Variables
+# regression <- step(lm(data = swiss,Fertility~.),trace=1,steps=2)
+#summary(regression)
 
-summary(regression)
-
+help("house_prices")
 
 backward_regression <- step(lm(data=house_prices_sqmt,price~zipcode),direction="backward")
 summary(backward_regression)
-?step
+
+
+manual_regression <- lm(data=house_prices_sqmt,price~bedrooms+bathrooms+floors+yr_built+yr_renovated+sqmt_living15+sqmt_lot15+sqmt_above+sqmt_basement)
+step_regression <- step(lm(data=house_prices_sqmt,price~bedrooms+bathrooms+floors+yr_built+yr_renovated+sqmt_living15+sqmt_lot15+sqmt_above+sqmt_basement),direction="backward")
+summary(step_regression)
+summary(manual_regression)
+
 
