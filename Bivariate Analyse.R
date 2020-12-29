@@ -84,6 +84,7 @@ cor_matrix <- cor(subset_house_prices_sqmt[1:15])
 
 cor(subset_house_prices_sqmt[1:15])
 cor(lat,price)
+cor(price,bathrooms)
 
 corrplot(cor_matrix,type="upper")
 
