@@ -63,9 +63,90 @@ backward_regression <- step(lm(data=house_prices_sqmt,price~zipcode),direction="
 summary(backward_regression)
 
 
-manual_regression <- lm(data=house_prices_sqmt,price~bedrooms+bathrooms+floors+yr_built+yr_renovated+sqmt_living15+sqmt_lot15+sqmt_above+sqmt_basement)
-step_regression <- step(lm(data=house_prices_sqmt,price~bedrooms+bathrooms+floors+yr_built+yr_renovated+sqmt_living15+sqmt_lot15+sqmt_above+sqmt_basement),direction="backward")
+# Wähle die Variablen, die zur Multiplen, linearen Regression verwendet werden sollen
+house_prices_sqmt_r <- subset(house_prices, select =  c(price,
+                                                        bedrooms,
+                                                        bathrooms,
+                                                        sqmt_living15,
+                                                        sqmt_lot15,
+                                                        floors,
+                                                        sqmt_above,
+                                                        sqmt_basement,
+                                                        yr_built,
+                                                        yr_renovated
+                                                        ))
+
+
+detach(house_prices_sqmt)
+attach(house_prices_sqmt_r)
+inspect(house_prices_sqmt_r)
+
+summary(step(lm(data=house_prices_sqmt_r,price~.)))
+
+# Korrelationsmatrix von house_prices_sqmt_r erstellen um auf Multikolinearität zu prüfen
+cor(house_prices_sqmt_r)
+
+korr_hp <- cor(house_prices_sqmt_r)
+korr_hp
+
+manual_regression <- lm(data=house_prices_sqmt_r,price~
+                                                      bedrooms
+                                                      +bathrooms
+                                                      +sqmt_living15
+                                                      +sqmt_lot15
+                                                      +floors
+                                                      +sqmt_basement
+                                                      +yr_built
+                                                      +yr_renovated)
+summary(manual_regression)
+
+step_forward <- step(lm(data=house_prices_sqmt_r,price~
+                     bedrooms
+                   +bathrooms
+                   +sqmt_living15
+                   +sqmt_lot15
+                   +floors
+                   +sqmt_basement
+                   +yr_built
+                   +yr_renovated),direction="forward")
+summary(step_forward)
+
+step_backward <- step(lm(data=house_prices_sqmt_r,price~
+                          bedrooms
+                        +bathrooms
+                        +sqmt_living15
+                        +sqmt_lot15
+                        +floors
+                        +sqmt_basement
+                        +yr_built
+                        +yr_renovated),direction="backward",trace=0)
+summary(step_backward)
+
+step_both <- step(lm(data=house_prices_sqmt_r,price~
+                           bedrooms
+                         +bathrooms
+                         +sqmt_living15
+                         +sqmt_lot15
+                         +floors
+                         +sqmt_basement
+                         +yr_built
+                         +yr_renovated),direction="both",trace=0)
+summary(step_both)
+
+
+
+step_regression <- step(lm(data=house_prices_sqmt,price~bedrooms+bathrooms+floors+yr_built+yr_renovated+sqmt_living15+sqmt_lot15+sqmt_above+sqmt_basement),direction="forward")
 summary(step_regression)
 summary(manual_regression)
 
+
+
+
+
+# Prüfe Variablen auf Multikollinearität
+cor(sqmt_living,sqmt_living15)
+cor(sqmt_living,price)
+cor(bathrooms,bedrooms)
+
+summary(lm(data=house_prices_sqmt,bedrooms~bathrooms))
 
