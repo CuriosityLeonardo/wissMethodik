@@ -7,7 +7,10 @@ detach("package:moderndive", unload=TRUE)
 
 
 # Install package moderndive that includes the dataset "house_prices" before adding the library
+
+#Install and Call Package moderndive that includes the dataset "house_prices"
 library(moderndive)
+#Install and call Package mosaic for descriptive Analysis
 library(mosaic)
 
 # add variables squaremeter to get a more intuitive understanding of the size
@@ -25,6 +28,7 @@ house_prices_sqmt <- subset(house_prices, select = -c(sqft_living,
                                                       sqft_lot15,
                                                       sqft_above,
                                                       sqft_basement))
+
 
 # attach the data to address the data in an easier way
 attach(house_prices_sqmt)

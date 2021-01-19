@@ -93,6 +93,12 @@ View(house_prices_sqmt)
 
 ?cor
 
+regression <- lm(house_prices_sqmt$price ~ house_prices_sqmt$sqmt_above)
+summary(regression)
+
+plot(price~sqmt_above)
+
+
 
 
 
