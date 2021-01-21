@@ -51,6 +51,7 @@ plot(density(price), main="Dichtefunktion: Hauspreise")
 abline(0,0,0,321950) # add 1st Quartile
 abline(0,0,0,645000) # add 3rd Quartile
 
+par(mfrow=c(1,1))
 # Dichtefunktion zoom in auf relevanten bereich
 plotprice <- function(){
 plot(density(price), main="Dichtefunktion: Hauspreise",xlim=c(0,2000000),xlab="Hauspreis",ylab="Dichtewahrscheinlichkeit",xaxt="n") # change x axis limit to exclude high outliers from the plot
@@ -63,9 +64,10 @@ text(710000,0.0000005,"- 3. Quartil")
 }
 plotprice()
 
+options("scipen"=10)
 par(mfrow=c(1,2))
-boxplot(house_prices_sqmt$price, main ="Verteilung Hauspreise")
-boxplot(house_prices_sqmt$price, outline = FALSE, main ="Verteilung Hauspreise\nohne Ausreißer")
+boxplot(house_prices_sqmt$price, main ="Verteilung Hauspreise", scientific=FALSE)
+boxplot(house_prices_sqmt$price, outline = FALSE, main ="Verteilung Hauspreise\nohne Ausreißer", scientific=FALSE)
 
 # Observation:
 # Globales Maximum innerhalb der Dichtefunktion => mean und median wahrscheinlich auch innerhalb Interquartilsabstand
