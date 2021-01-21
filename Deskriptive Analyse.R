@@ -132,3 +132,4 @@ text(h$mids,h$counts,labels=h$counts,adj=c(0.5,-0.5)) # Die meisten Häuser in K
 
 
 
+
