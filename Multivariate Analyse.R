@@ -70,10 +70,10 @@ summary(backward_regression)
 # Wähle die Variablen, die zur Multiplen, linearen Regression verwendet werden sollen
 house_prices_sqmt_r <- subset(house_prices, select =  c(price,
                                                         bedrooms,
-                                                        bathrooms,
-                                                        sqmt_living15,
-                                                        sqmt_lot15,
-                                                        floors,
+                                                        #bathrooms,
+                                                        #sqmt_living15,
+                                                        #sqmt_lot15,
+                                                        #floors,
                                                         sqmt_above,
                                                         sqmt_basement,
                                                         yr_built,
@@ -81,11 +81,113 @@ house_prices_sqmt_r <- subset(house_prices, select =  c(price,
                                                         ))
 
 
-detach(house_prices_sqmt)
+#detach(house_prices_sqmt)
 attach(house_prices_sqmt_r)
 inspect(house_prices_sqmt_r)
 
-summary(step(lm(data=house_prices_sqmt_r,price~.)))
+options("scipen"=10)
+
+manual_regression <- lm(data=house_prices_sqmt_r,price~sqmt_above+sqmt_basement+yr_renovated)
+summary(manual_regression)
+
+
+
+
+
+
+summary(step(lm(data=house_prices_sqmt_r,price~.))) # Warum sind Reg.Koeffizienten von bedrooms, sqmt_lot15 und yr_built negativ?
+
+summary(step(lm(data=house_prices_sqmt_r,price~bedrooms))) # Beta1 = 121716
+summary(step(lm(data=house_prices_sqmt_r,price~bedrooms + sqmt_lot15))) # Beta1 = 120867, Beta2 = 10.6366
+summary(step(lm(data=house_prices_sqmt_r,price~bedrooms + sqmt_lot15 + yr_built))) # yr_built nicht signifikant
+
+step_backward <- step(lm(data=house_prices_sqmt_r,price~
+                           bedrooms
+                         +bathrooms
+                         +sqmt_living15
+                         +sqmt_lot15
+                         +floors
+                         +sqmt_above
+                         +sqmt_basement
+                         +yr_built
+                         +yr_renovated),direction="backward",trace=0)
+summary(step_backward)
+
+manual_regression <- lm(data=house_prices_sqmt_r,bathrooms~
+                          bedrooms
+                        +price
+                        +sqmt_living15
+                        +sqmt_lot15
+                        +floors
+                        +sqmt_above
+                        +sqmt_basement
+                        +yr_built
+                        +yr_renovated)
+summary(manual_regression)
+
+# Wähle erneut die Variablen, die zur Multiplen, linearen Regression verwendet werden sollen (ohne bathrooms)
+house_prices_sqmt_r <- subset(house_prices, select =  c(price,
+                                                        bedrooms,
+                                                        sqmt_living15,
+                                                        sqmt_lot15,
+                                                        floors,
+                                                        sqmt_above,
+                                                        sqmt_basement,
+                                                        yr_built,
+                                                        yr_renovated
+))
+
+
+#detach(house_prices_sqmt)
+attach(house_prices_sqmt_r)
+
+step_backward <- step(lm(data=house_prices_sqmt_r,price~.),direction="backward",trace=0)
+summary(step_backward)
+
+manual_regression <- lm(data=house_prices_sqmt_r,yr_built~
+                        +price
+                        +sqmt_living15
+                        +sqmt_lot15
+                        +floors
+                        +sqmt_above
+                        +sqmt_basement
+                        +bedrooms
+                        +yr_renovated)
+summary(manual_regression)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+library(car)
+vif(manual_regression)
+
+
+
+
+
+manual_regression <- lm(data=house_prices_sqmt_r,bedrooms~
+                                                       bathrooms)
+summary(manual_regression)
+
+
+
+
+
+
+
 
 # Korrelationsmatrix von house_prices_sqmt_r erstellen um auf Multikolinearität zu prüfen
 cor(house_prices_sqmt_r)
@@ -93,16 +195,17 @@ cor(house_prices_sqmt_r)
 korr_hp <- cor(house_prices_sqmt_r)
 korr_hp
 
+
 manual_regression <- lm(data=house_prices_sqmt_r,price~
-                                                      bedrooms
-                                                      +bathrooms
-                                                      +sqmt_living15
-                                                      +sqmt_lot15
-                                                      +floors
-                                                      +sqmt_basement
-                                                      +yr_built
-                                                      +yr_renovated)
+                          bedrooms
+                        +sqmt_lot15
+                        +yr_built
+                        )
 summary(manual_regression)
+
+
+
+
 
 step_forward <- step(lm(data=house_prices_sqmt_r,price~
                      bedrooms
@@ -121,6 +224,7 @@ step_backward <- step(lm(data=house_prices_sqmt_r,price~
                         +sqmt_living15
                         +sqmt_lot15
                         +floors
+                        +sqmt_above
                         +sqmt_basement
                         +yr_built
                         +yr_renovated),direction="backward",trace=0)
